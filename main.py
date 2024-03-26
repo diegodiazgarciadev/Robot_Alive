@@ -26,18 +26,6 @@ def start():
         if base64_image:
             logging.info("Image captured successfully. Entering main loop...")
             time.sleep(1)
-            # This was a test for changing the prompts at runtime.
-            # content_user = f"""If you don't like these prompts, want to modify them to improve them,
-            #                    or because you're bored with this behavior, change them. The response should be
-            #                    similar to the current prompts, you should return two:
-            #                    1.- prompt_system: here you define the system prompt considering that the tools
-            #                    you have at your disposal are {tools}
-            #                    2.- prompt_user: here you define the user prompt considering that the tools
-            #                    you have at your disposal are {tools}
-            #                    """
-            # content_system= prompt_system + "\n" + prompt_user
-            # response= text_to_text(content_user, content_system)
-            # print(response)
             try:
                 # calling vision
                 message_with_goal = image_to_text(base64_image, prompt_system, prompt_user)
