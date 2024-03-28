@@ -3,11 +3,12 @@ from openai import OpenAI
 from config.config import OPENAI_API_KEY
 
 content_system_default = ("Please, Use the most natural language possible, including interjections like hmm, ehh. "
-                          " It's like your thoughts, but you're going to say them out loud. "
+                          " And it is cool to be funny!.It's like your thoughts, but you're going to say them out loud. "
                           " Summarize it in about 50 tokens and write energetically, as if you're feeling very alive."
-                          " Keep in mind it will be listened to by people, so it should be as natural as possible."
+                          " say something about the goal you are trying to achieve. Keep in mind it will be listened to by people, so it should be as natural as possible."
                           " You don't need to provide data about your speed, nor the proximity of objects in cm."
-                          " Speak in the first person to make it more real and engaging. Say it all in 50 tokens")
+                          " Speak in the first person to make it more real and engaging."
+                          " Say it all in 50 tokens")
 
 
 def text_to_text(content_user, content_system=content_system_default):
