@@ -5,6 +5,8 @@ import base64
 import requests
 import cv2
 from config.config import CAMERA_IP_URL,ESP32_CAM_URL
+import datetime
+import os
 
 
 def image_to_base64(pil_image):
@@ -50,10 +52,16 @@ def capture_and_process_frame(esp32_cam_ip=ESP32_CAM_URL, skip_frames=2):
 
 
 
+
+def ensure_directory_exists(directory_path):
+    """Asegura que el directorio especificado existe, creándolo si es necesario."""
+    if not os.path.exists(directory_path):
+        os.makedirs(directory_path)
+
 def capture_image_from_ip_camera(camera_url=CAMERA_IP_URL):
     """
-     Captures an image from an IP camera and returns it as a base64 string.
-     """
+    Captures an image from an IP camera, saves it to disk, and returns the file path.
+    """
     try:
         cap = cv2.VideoCapture(camera_url)
         if not cap.isOpened():
@@ -62,7 +70,15 @@ def capture_image_from_ip_camera(camera_url=CAMERA_IP_URL):
 
         ret, frame = cap.read()
         if ret:
+            images_directory = "data/images/captured_images"
+            ensure_directory_exists(images_directory)
+
+            timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            image_filename = f"{images_directory}/captured_image_{timestamp}.jpg"
+
             pil_image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+            pil_image.save(image_filename)  # Save image to disk
+            logging.info(f"Image captured and saved: {image_filename}")
             base64_image = image_to_base64(pil_image)
             return base64_image
         else:
@@ -70,20 +86,4 @@ def capture_image_from_ip_camera(camera_url=CAMERA_IP_URL):
     except Exception as e:
         logging.error(f"An error occurred during capture: {e}")
     return None
-
-
-def capture_from_image_folder(image_path):
-    """
-    Simulates capturing an image from a specific directory and converts it to base64.
-    """
-    try:
-        pil_image = Image.open(image_path)
-        base64_image = image_to_base64(pil_image)
-        return base64_image
-    except Exception as e:
-        logging.error(f"Error loading image: {e}")
-        return None
-
-
-
 
