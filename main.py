@@ -1,4 +1,5 @@
 import logging
+from src.utils import logger_config
 from src.llm_services.OAI_text_to_speech import text_to_speech
 from src.llm_services.OAI_text_to_text import text_to_text
 from src.utils.audio import play_audio_with_pygame
@@ -51,6 +52,7 @@ def start():
         time.sleep(CAPTURE_INTERVAL_SECONDS)
 
 if __name__ == '__main__':
-    logging.info('Robot LLM proyect')
+    logging.info('Robot Alive project')
+    logger = logging.getLogger(__name__)
     start()
 
