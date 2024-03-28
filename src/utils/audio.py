@@ -3,6 +3,8 @@ import sounddevice as sd
 from scipy.io.wavfile import write
 import io
 import pygame
+import requests
+from config.config import ESP32_IP_ROBOT, SPEECH_ENABLED
 
 def record():
     # Configuration for recording
@@ -29,6 +31,14 @@ def record():
 
 def play_audio_with_pygame(audio_data):
     try:
+        if not SPEECH_ENABLED:
+            logging.info("Speech is disabled.")
+            return None
+
+        speak_url = f"http://{ESP32_IP_ROBOT}/speak"
+        silence_url = f"http://{ESP32_IP_ROBOT}/silence"
+
+
         # Initialize pygame
         pygame.init()
         pygame.mixer.init()
@@ -37,6 +47,8 @@ def play_audio_with_pygame(audio_data):
         audio_file = io.BytesIO(audio_data)
         pygame.mixer.music.load(audio_file)
 
+        requests.get(speak_url)
+        logging.info("Robot starting to speak...")
         # Play the audio
         pygame.mixer.music.play()
 
@@ -44,6 +56,8 @@ def play_audio_with_pygame(audio_data):
         while pygame.mixer.music.get_busy():
             pygame.time.Clock().tick(10)
 
+        requests.get(silence_url)
+        logging.info("Robot stopped speaking.")
         logging.info("Audio playback completed successfully.")
     except Exception as e:
         logging.error(f"An error occurred during audio playback: {e}")
