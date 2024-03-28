@@ -7,9 +7,12 @@ from src.utils.camera import capture_image_from_ip_camera
 from src.llm_services.OAI_image_to_text import image_to_text
 from src.prompts.prompt_car_llm import prompt_user, prompt_system
 from src.agents.goal import goal_agent,move_and_pic
+from src.utils.robot_context import RobotContext
 from config.config import SPEECH_ENABLED,CAPTURE_INTERVAL_SECONDS,LOG_LEVEL
 import time
 import warnings
+import uuid
+
 
 
 numeric_level = getattr(logging, LOG_LEVEL.upper(), None)
@@ -22,14 +25,19 @@ tools = [move_and_pic]
 
 def start():
     while True:
+        cycle_id = uuid.uuid4().hex
+        RobotContext.set_cycle_id(cycle_id)
+        logging.info("-------------------------------------------------------")
+        logging.info("-----------------Entering main loop--------------------")
+        logging.info("-------------------------------------------------------")
         logging.info("Capturing image...")
-        base64_image  = capture_image_from_ip_camera()
+        base64_image = capture_image_from_ip_camera(cycle_id=cycle_id)
         if base64_image:
-            logging.info("Image captured successfully. Entering main loop...")
             time.sleep(1)
             try:
                 # calling vision
                 message_with_goal = image_to_text(base64_image, prompt_system, prompt_user)
+                logging.info(f"First Image description result and goal for cycle {cycle_id}: {message_with_goal}")
 
                 if SPEECH_ENABLED:
                     logging.info("Generating speech from text...")
