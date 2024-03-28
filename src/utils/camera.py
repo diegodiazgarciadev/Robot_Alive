@@ -58,9 +58,10 @@ def ensure_directory_exists(directory_path):
     if not os.path.exists(directory_path):
         os.makedirs(directory_path)
 
-def capture_image_from_ip_camera(camera_url=CAMERA_IP_URL):
+def capture_image_from_ip_camera(camera_url=CAMERA_IP_URL, cycle_id=None, action_number=None):
     """
-    Captures an image from an IP camera, saves it to disk, and returns the file path.
+    Captures an image from an IP camera, saves it to disk including cycle_id and action_number in the filename,
+    and returns the base64 encoded image.
     """
     try:
         cap = cv2.VideoCapture(camera_url)
@@ -74,7 +75,9 @@ def capture_image_from_ip_camera(camera_url=CAMERA_IP_URL):
             ensure_directory_exists(images_directory)
 
             timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            image_filename = f"{images_directory}/captured_image_{timestamp}.jpg"
+            file_suffix = f"{cycle_id}_{action_number}" if cycle_id and action_number else "uncategorized"
+            image_filename = f"{images_directory}/captured_image_{file_suffix}_{timestamp}.jpg"
+
 
             pil_image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
             pil_image.save(image_filename)  # Save image to disk
