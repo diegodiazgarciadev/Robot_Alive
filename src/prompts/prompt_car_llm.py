@@ -52,5 +52,5 @@ prompt_user = """
                     It is mandatory to choose an action and write it at the beginning of your response. 
                     The total text should not exceed 150 tokens.
                     So it is mandatory to set a clear goal that can be achieve with your limited set of actions.
-                    so write something like goal : goal description
+                    so write something like goal : goal description. and please describe de goal properly
                     """
