@@ -1,28 +1,8 @@
-# src/utils.py
-
 from datetime import datetime
 import asyncio
 from meross_iot.http_api import MerossHttpClient
 from meross_iot.manager import MerossManager
-
-import json
-import os
-
-
-def load_config(config_path):
-    """
-    Load configuration file from the provided path.
-
-    Args:
-        config_path (str): Path to the configuration file.
-
-    Returns:
-        dict: Configuration data.
-    """
-    with open(os.path.join(os.path.dirname(__file__), config_path)) as json_file:
-        config = json.load(json_file)
-
-    return config
+from config.config import EMAIL_IOT_LIGHT, PASSWORD_IOT_LIGHT
 
 
 async def control_plug(dev, action):
@@ -38,7 +18,7 @@ async def setup_device(email, password, device_type):
     """
 
     # Setup the HTTP client API from user-password
-    http_api_client = await MerossHttpClient.async_from_user_password(email=email, password=password)
+    http_api_client = await MerossHttpClient.async_from_user_password(email=email, password=password, api_base_url ="https://iotx-eu.meross.com")
 
     # Setup and start the device manager
     manager = MerossManager(http_client=http_api_client)
@@ -53,16 +33,25 @@ async def setup_device(email, password, device_type):
     dev = plugs[0]
     return dev, manager
 
-async def main():
-    # Load configuration
-    credentials = load_config("../../credentials.json")
+async def async_control_light(state: str):
+    """
+    Control the light by turning it on or off based on the specified state.
 
-    # Initialize the device
-    dev, manager = await setup_device(credentials["email"], credentials["password"], "mss210")
+    Args:
+        state (str): The desired state of the light, 'on' or 'off'.
+    """
+    # Use the existing setup_device function to get the device and manager
+    dev, manager = await setup_device(EMAIL_IOT_LIGHT, PASSWORD_IOT_LIGHT, "mss210")
     if dev is None:
+        print("Device not found.")
         return
-    control_plug(dev, 'on')
 
-# Run the main function
-if __name__ == "__main__":
-    asyncio.run(main())
+    # Use the existing control_plug function to change the state of the device
+    await control_plug(dev, state)
+    print(f"Light has been turned {state}.")
+
+
+def control_light_robot(status: str):
+    asyncio.run(async_control_light(status))
+
+control_light_robot("off")

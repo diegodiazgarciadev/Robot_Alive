@@ -2,14 +2,14 @@ import logging
 from src.callbacks.tool_callbacks import AgentCallbackHandler
 from src.utils.robot_context import RobotContext
 import warnings
-from src.tools.tools import move_and_pic
+from src.tools.tools import move_and_pic, control_light
 from langchain.agents import initialize_agent, AgentType
 from langchain_openai import OpenAI
 from config.config import OPENAI_API_KEY
 warnings.filterwarnings("ignore", category=DeprecationWarning, message="LangChainDeprecationWarning")
 
 
-tools = [move_and_pic]
+tools = [move_and_pic, control_light]
 def goal_agent(goal: str) -> str:
     """
      you are a robot with the capacity of doing some movements and sometimes you set a gaol like find something, explore

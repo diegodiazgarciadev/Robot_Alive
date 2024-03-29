@@ -5,6 +5,8 @@ import os
 load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+EMAIL_IOT_LIGHT = os.getenv("EMAIL_IOT_LIGHT")
+PASSWORD_IOT_LIGHT = os.getenv("PASSWORD_IOT_LIGHT")
 ESP32_IP_ROBOT = "192.168.1.148"
 CAMERA_IP_URL = "http://192.168.1.149:8080/video"
 ESP32_CAM_URL = "http://192.168.1.142:81/stream"
