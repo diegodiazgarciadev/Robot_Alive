@@ -1,0 +1,11 @@
+openai
+requests
+numpy
+pygame
+opencv-python
+sounddevice
+scipy
+python-dotenv
+meross_iot
+langchain
+langchain_openai
